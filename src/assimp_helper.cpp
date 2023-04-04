@@ -77,8 +77,6 @@ Scene AssimpHelper::Load(const char* filename, uint32_t flags)
 					scene.meshes[i].F(j, k) = assimp_mesh->mFaces[j].mIndices[k];
 				}
 			}
-
-			igl::edge_flaps(scene.meshes[i].F, scene.meshes[i].E, scene.meshes[i].EMAP, scene.meshes[i].EF, scene.meshes[i].EI);
 		}
 
 		// Handle hierarchy
