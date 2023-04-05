@@ -11,4 +11,5 @@ set(CMAKE_CXX_STANDARD 17)
 # Add your project files
 file(GLOB SRC_FILES src/*.cpp src/*.h)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(${PROJECT_NAME} PUBLIC igl::glfw igl::imgui assimp::assimp)
