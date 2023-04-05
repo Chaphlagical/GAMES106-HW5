@@ -1,7 +1,5 @@
 #include "details/ForwardDecl.h"
 
-#include <ranges>
-
 namespace Ubpa {
 	template<typename Impl, typename Data, typename Value>
 	class TLoopIteratorBase {
@@ -25,7 +23,7 @@ namespace Ubpa {
 	};
 
 	template<typename Impl, typename Data, typename Value>
-	class TLoopViewBase : public std::ranges::view_base {
+	class TLoopViewBase {
 	public:
 		class Iterator : public TLoopIteratorBase<Iterator, Data, Value> {
 		public:

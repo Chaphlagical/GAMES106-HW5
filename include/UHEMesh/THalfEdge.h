@@ -2,8 +2,6 @@
 
 #include "TLoopView.h"
 
-#include <concepts>
-
 namespace Ubpa {
 	template<typename Traits>
 	class THalfEdge {

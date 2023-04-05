@@ -89,10 +89,10 @@ namespace Ubpa {
 	}
 
 	template<typename Traits>
-	template<std::ranges::range HalfEdgeLoop, typename... Args>
+	template<typename HalfEdgeLoop, typename... Args>
 	HEMeshTraits_P<Traits>* HEMesh<Traits>::AddPolygon(const HalfEdgeLoop& heLoop, Args&&... args) {
-		assert(std::ranges::begin(heLoop) != std::ranges::end(heLoop) && "heLoop must be non-empty");
-		H* he0 = *std::ranges::begin(heLoop);
+		assert(heLoop.begin() != heLoop.end() && "heLoop must be non-empty");
+		H* he0 = *heLoop.begin();
 #ifndef NDEBUG
 		{
 			H* preHE = nullptr;

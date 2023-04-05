@@ -128,7 +128,7 @@ namespace Ubpa {
 		template<typename... Args>
 		E* AddEdge(V* v0, V* v1, Args&&... args);
 		// polygon's halfedge is heLoop[0]
-		template<std::ranges::range HalfEdgeLoop, typename... Args>
+		template<typename HalfEdgeLoop, typename... Args>
 		P* AddPolygon(const HalfEdgeLoop& heLoop, Args&&... args);
 
 		void RemovePolygon(P* polygon);
