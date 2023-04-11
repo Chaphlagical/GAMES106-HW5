@@ -48,13 +48,15 @@ void Application::LoadScene()
 	{
 		static std::map<int32_t, bool> loading_options = {
 		    {aiProcess_Triangulate, false},
-		    {aiProcess_FlipUVs, false},
+		    {aiProcess_FlipUVs, true},
 		    {aiProcess_GenSmoothNormals, false},
+		    {aiProcess_JoinIdenticalVertices, false},
 		};
 		{
 			ImGui::Checkbox("Triangulate", &loading_options[aiProcess_Triangulate]);
 			ImGui::Checkbox("FlipUVs", &loading_options[aiProcess_FlipUVs]);
 			ImGui::Checkbox("GenSmoothNormals", &loading_options[aiProcess_GenSmoothNormals]);
+			ImGui::Checkbox("JoinIdenticalVertices", &loading_options[aiProcess_JoinIdenticalVertices]);
 		}
 		if (ImGui::Button("Load"))
 		{

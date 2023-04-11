@@ -49,7 +49,7 @@ Scene AssimpHelper::Load(const char *filename, uint32_t flags)
 
 	std::map<std::string, int32_t> texture_map;
 
-	if (s_scene = s_importer.ReadFile(filename, flags | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs))
+	if (s_scene = s_importer.ReadFile(filename, flags))
 	{
 		scene.filename     = filename;
 		scene.assimp_scene = s_scene;
