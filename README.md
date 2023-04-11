@@ -14,5 +14,5 @@ cmake --build ./
 
 Run `GAMES106-HW5.exe` in Debug/Release folder and load a scene, you may see:
 
-![image-20230411213906286](Img/screenshot.png)
+![image-20230411213906286](img/screenshot.png)
 
