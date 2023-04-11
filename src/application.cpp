@@ -1,8 +1,8 @@
 #include "application.h"
 #include "mesh_reduction.h"
 
-#include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 #include <assimp/postprocess.h>
+#include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 
 Eigen::RowVector3d GetColor(uint32_t a)
 {
@@ -23,11 +23,10 @@ Application::Application()
 
 void Application::Run()
 {
-	m_menu.callback_draw_viewer_window = [&]()
-	{
+	m_menu.callback_draw_viewer_window = [&]() {
 		DrawUI();
 	};
-
+	m_viewer.data_list[0].show_texture = true;
 	m_viewer.launch();
 }
 
@@ -48,9 +47,9 @@ void Application::LoadScene()
 	if (ImGui::CollapsingHeader("Load Scene"))
 	{
 		static std::map<int32_t, bool> loading_options = {
-			{aiProcess_Triangulate, false},
-			{aiProcess_FlipUVs, false},
-			{aiProcess_GenSmoothNormals, false},
+		    {aiProcess_Triangulate, false},
+		    {aiProcess_FlipUVs, false},
+		    {aiProcess_GenSmoothNormals, false},
 		};
 		{
 			ImGui::Checkbox("Triangulate", &loading_options[aiProcess_Triangulate]);
@@ -60,7 +59,7 @@ void Application::LoadScene()
 		if (ImGui::Button("Load"))
 		{
 			uint32_t flags = 0;
-			for (auto& [option, enable] : loading_options)
+			for (auto &[option, enable] : loading_options)
 			{
 				if (enable)
 				{
@@ -68,8 +67,8 @@ void Application::LoadScene()
 				}
 			}
 			std::string filename = igl::file_dialog_open();
-			m_raw_scene = AssimpHelper::Load(filename.c_str(), flags);
-			m_scene = m_raw_scene;
+			m_raw_scene          = AssimpHelper::Load(filename.c_str(), flags);
+			m_scene              = m_raw_scene;
 			UpdateSceneViewer();
 		}
 	}
@@ -79,8 +78,8 @@ void Application::SaveScene()
 {
 	if (ImGui::CollapsingHeader("Save Scene"))
 	{
-		const char* const export_formats[] = { "gltf2", "glb2" };
-		static int32_t export_format = 0;
+		const char *const export_formats[] = {"gltf2", "glb2"};
+		static int32_t    export_format    = 0;
 		ImGui::Combo("", &export_format, export_formats, 2);
 		ImGui::SameLine();
 		if (ImGui::Button("Save"))
@@ -103,7 +102,7 @@ void Application::SceneInfo()
 		if (ImGui::TreeNode("Meshes"))
 		{
 			uint32_t count = 0;
-			for (auto& mesh : m_scene.meshes)
+			for (auto &mesh : m_scene.meshes)
 			{
 				ImGui::PushID(&mesh);
 				if (ImGui::TreeNode((std::string("Meshes #") + std::to_string(count++)).c_str()))
@@ -124,7 +123,7 @@ void Application::SceneInfo()
 		if (ImGui::TreeNode("Instances"))
 		{
 			uint32_t count = 0;
-			for (auto& instance : m_scene.instances)
+			for (auto &instance : m_scene.instances)
 			{
 				ImGui::PushID(&instance);
 				if (ImGui::TreeNode((std::string("Instances #") + std::to_string(count++)).c_str()))
@@ -144,11 +143,11 @@ void Application::SceneInfo()
 		if (change_visible)
 		{
 			size_t id = 0;
-			for (auto& instance : m_scene.instances)
+			for (auto &instance : m_scene.instances)
 			{
-				for (auto& mesh_id : instance.submeshes)
+				for (auto &mesh_id : instance.submeshes)
 				{
-					const auto& mesh = m_scene.meshes[mesh_id];
+					const auto &mesh = m_scene.meshes[mesh_id];
 					m_viewer.data_list[id].set_visible(instance.is_visible && mesh.is_visible);
 					++id;
 				}
@@ -159,28 +158,51 @@ void Application::SceneInfo()
 
 void Application::SceneColor(bool reset)
 {
-	const char* const color_config[] = { "Mesh", "Submesh","Instance" };
-	if (ImGui::Combo("Color Config", reinterpret_cast<int32_t*>(&m_color_config), color_config, 3) || reset)
+	static bool wireframe = true;
+	if (ImGui::Checkbox("Wireframe", &wireframe))
 	{
 		size_t instance_id = 0;
-		size_t submesh_id = 0;
-		for (auto& instance : m_scene.instances)
+		size_t submesh_id  = 0;
+		for (auto &instance : m_scene.instances)
 		{
-			for (auto& mesh : instance.submeshes)
+			for (auto &mesh : instance.submeshes)
+			{
+				m_viewer.data_list[submesh_id].show_lines = wireframe;
+				++submesh_id;
+			}
+			++instance_id;
+		}
+	}
+
+	const char *const color_config[] = {"Texture", "Mesh", "Submesh", "Instance"};
+	if (reset || ImGui::Combo("Color Config", reinterpret_cast<int32_t *>(&m_color_config), color_config, 4))
+	{
+		size_t instance_id = 0;
+		size_t submesh_id  = 0;
+		for (auto &instance : m_scene.instances)
+		{
+			for (auto &mesh : instance.submeshes)
 			{
 				switch (m_color_config)
 				{
-				case ColorConfig::Mesh:
-					m_viewer.data_list[submesh_id].set_colors(GetColor(mesh));
-					break;
-				case ColorConfig::Submesh:
-					m_viewer.data_list[submesh_id].set_colors(GetColor(submesh_id));
-					break;
-				case ColorConfig::Instance:
-					m_viewer.data_list[submesh_id].set_colors(GetColor(instance_id));
-					break;
-				default:
-					break;
+					case ColorConfig::Texture:
+						m_viewer.data_list[submesh_id].set_colors(Eigen::RowVector3d(1.0, 1.0, 1.0));
+						m_viewer.data_list[submesh_id].show_texture = true;
+						break;
+					case ColorConfig::Mesh:
+						m_viewer.data_list[submesh_id].set_colors(GetColor(mesh));
+						m_viewer.data_list[submesh_id].show_texture = false;
+						break;
+					case ColorConfig::Submesh:
+						m_viewer.data_list[submesh_id].set_colors(GetColor(submesh_id));
+						m_viewer.data_list[submesh_id].show_texture = false;
+						break;
+					case ColorConfig::Instance:
+						m_viewer.data_list[submesh_id].set_colors(GetColor(instance_id));
+						m_viewer.data_list[submesh_id].show_texture = false;
+						break;
+					default:
+						break;
 				}
 				++submesh_id;
 			}
@@ -195,15 +217,21 @@ void Application::UpdateSceneViewer()
 	m_viewer.data_list.resize(m_scene.num_total_mesh);
 	// Set scene
 	size_t id = 0;
-	for (auto& instance : m_scene.instances)
+	for (auto &instance : m_scene.instances)
 	{
-		for (auto& mesh_id : instance.submeshes)
+		for (auto &mesh_id : instance.submeshes)
 		{
-			const auto& mesh = m_scene.meshes[mesh_id];
+			const auto &mesh = m_scene.meshes[mesh_id];
 			m_viewer.data_list[id].set_mesh((mesh.V.rowwise().homogeneous() * instance.transform).rowwise().hnormalized(), mesh.F);
 			m_viewer.data_list[id].set_uv(mesh.UV);
 			m_viewer.data_list[id].set_normals((mesh.N.rowwise().homogeneous() * instance.transform).rowwise().hnormalized());
+			if (mesh.texture >= 0)
+			{
+				const auto &texture = m_scene.textures[mesh.texture];
+				m_viewer.data_list[id].set_texture(texture.R, texture.G, texture.B);
+			}
 			m_viewer.data_list[id].set_visible(instance.is_visible && mesh.is_visible);
+			m_viewer.data_list[id].show_texture = true;
 			++id;
 		}
 	}
@@ -214,12 +242,12 @@ void Application::EditScene()
 {
 	if (ImGui::CollapsingHeader("Mesh Reduction"))
 	{
-		const char* const reduction_configs[] = {
-			"Reduction",
-			"ReductionWithAppearancePresentation",
-			"ReductionWithUVMap",
+		const char *const reduction_configs[] = {
+		    "Reduction",
+		    "ReductionWithAppearancePresentation",
+		    "ReductionWithUVMap",
 		};
-		ImGui::Combo("Config", reinterpret_cast<int32_t*>(&m_reduction_config), reduction_configs, 3);
+		ImGui::Combo("Config", reinterpret_cast<int32_t *>(&m_reduction_config), reduction_configs, 3);
 		ImGui::DragFloat("Ratio", &m_reduction_ratio, 0.01f, 0.f, 1.f, "%.2f");
 		if (ImGui::Button("Reduction"))
 		{
@@ -227,17 +255,17 @@ void Application::EditScene()
 			{
 				switch (m_reduction_config)
 				{
-				case ReductionConfig::Reduction:
-					m_scene.meshes[i] = MeshReduction::Reduction(m_raw_scene.meshes[i], m_reduction_ratio);
-					break;
-				case ReductionConfig::ReductionWithAppearancePresentation:
-					m_scene.meshes[i] = MeshReduction::ReductionWithAppearancePresentation(m_raw_scene.meshes[i], m_reduction_ratio);
-					break;
-				case ReductionConfig::ReductionWithUVMap:
-					m_scene.meshes[i] = MeshReduction::ReductionWithUVMap(m_raw_scene.meshes[i], m_reduction_ratio);
-					break;
-				default:
-					break;
+					case ReductionConfig::Reduction:
+						m_scene.meshes[i] = MeshReduction::Reduction(m_raw_scene.meshes[i], m_reduction_ratio);
+						break;
+					case ReductionConfig::ReductionWithAppearancePresentation:
+						m_scene.meshes[i] = MeshReduction::ReductionWithAppearancePresentation(m_raw_scene.meshes[i], m_reduction_ratio);
+						break;
+					case ReductionConfig::ReductionWithUVMap:
+						m_scene.meshes[i] = MeshReduction::ReductionWithUVMap(m_raw_scene.meshes[i], m_reduction_ratio);
+						break;
+					default:
+						break;
 				}
 			}
 			UpdateSceneViewer();
