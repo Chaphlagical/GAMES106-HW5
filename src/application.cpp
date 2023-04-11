@@ -4,7 +4,7 @@
 #include <assimp/postprocess.h>
 #include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 
-Eigen::RowVector3d GetColor(uint32_t a)
+Eigen::RowVector3d GetColor(size_t a)
 {
 	a = (a + 0x7ed55d16) + (a << 12);
 	a = (a ^ 0xc761c23c) ^ (a >> 19);

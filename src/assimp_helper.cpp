@@ -129,9 +129,9 @@ Scene AssimpHelper::Load(const char *filename, uint32_t flags)
 						texture.G.resize(width, height);
 						texture.B.resize(width, height);
 
-						for (uint32_t x = 0; x < width; ++x)
+						for (int32_t x = 0; x < width; ++x)
 						{
-							for (uint32_t y = 0; y < height; ++y)
+							for (int32_t y = 0; y < height; ++y)
 							{
 								texture.R(x, y) = raw_data[(y * width + x) * 3 + 0];
 								texture.G(x, y) = raw_data[(y * width + x) * 3 + 1];
@@ -181,8 +181,8 @@ void AssimpHelper::Save(const char *filename, const Scene &scene, const char *fl
 	{
 		aiMesh *assimp_mesh = scene.assimp_scene->mMeshes[i];
 
-		const uint32_t num_vertices = scene.meshes[i].V.rows();
-		const uint32_t num_faces    = scene.meshes[i].F.rows();
+		const uint32_t num_vertices = static_cast<uint32_t>(scene.meshes[i].V.rows());
+		const uint32_t num_faces    = static_cast<uint32_t>(scene.meshes[i].F.rows());
 
 		if (assimp_mesh->mNumVertices != num_vertices)
 		{
@@ -208,9 +208,9 @@ void AssimpHelper::Save(const char *filename, const Scene &scene, const char *fl
 
 		for (uint32_t j = 0; j < num_vertices; j++)
 		{
-			assimp_mesh->mVertices[j].x = scene.meshes[i].V(j, 0);
-			assimp_mesh->mVertices[j].y = scene.meshes[i].V(j, 1);
-			assimp_mesh->mVertices[j].z = scene.meshes[i].V(j, 2);
+			assimp_mesh->mVertices[j].x = static_cast<float>(scene.meshes[i].V(j, 0));
+			assimp_mesh->mVertices[j].y = static_cast<float>(scene.meshes[i].V(j, 1));
+			assimp_mesh->mVertices[j].z = static_cast<float>(scene.meshes[i].V(j, 2));
 		}
 
 		for (uint32_t j = 0; j < num_faces; j++)
