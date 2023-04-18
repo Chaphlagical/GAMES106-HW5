@@ -4,7 +4,7 @@ namespace Ubpa {
 	template<bool IsConst, typename Traits>
 	class VertexAdjEdgeView : public TLoopViewBase<VertexAdjEdgeView<IsConst, Traits>, HEMeshTraits_PtrH<IsConst, Traits>, HEMeshTraits_PtrE<IsConst, Traits>> {
 		using PtrH = HEMeshTraits_PtrH<IsConst, Traits>;
-		using PtrE = HEMeshTraits_PtrV<IsConst, Traits>;
+		using PtrE = HEMeshTraits_PtrE<IsConst, Traits>;
 		friend TLoopViewBase<VertexAdjEdgeView<IsConst, Traits>, PtrH, PtrE>;
 		static PtrE ToValue(PtrH he) { return he->Edge(); }
 		static PtrH Next(PtrH he) { return he->RotateNext(); }
@@ -13,14 +13,14 @@ namespace Ubpa {
 	};
 
 	template<bool IsConst, typename Traits>
-	class VertexAdjVertexView : public TLoopViewBase<VertexAdjEdgeView<IsConst, Traits>, HEMeshTraits_PtrV<IsConst, Traits>, HEMeshTraits_PtrV<IsConst, Traits>> {
+	class VertexAdjVertexView : public TLoopViewBase<VertexAdjVertexView<IsConst, Traits>, HEMeshTraits_PtrH<IsConst, Traits>, HEMeshTraits_PtrV<IsConst, Traits>> {
 		using PtrH = HEMeshTraits_PtrH<IsConst, Traits>;
 		using PtrV = HEMeshTraits_PtrV<IsConst, Traits>;
-		friend TLoopViewBase<VertexAdjEdgeView<IsConst, Traits>, PtrH, PtrV>;
+		friend TLoopViewBase<VertexAdjVertexView<IsConst, Traits>, PtrH, PtrV>;
 		static PtrV ToValue(PtrH he) { return he->End(); }
 		static PtrH Next(PtrH he) { return he->RotateNext(); }
 	public:
-		using TLoopViewBase<VertexAdjEdgeView<IsConst, Traits>, PtrH, PtrV>::TLoopViewBase;
+		using TLoopViewBase<VertexAdjVertexView<IsConst, Traits>, PtrH, PtrV>::TLoopViewBase;
 	};
 
 	template<typename Traits>
@@ -28,7 +28,7 @@ namespace Ubpa {
 		if (IsIsolated())
 			return true;
 
-		for (auto* he : HalfEdge()->NextLoop()) {
+		for (auto he : HalfEdge()->RotateNextLoop()) {
 			if (he->IsOnBoundary())
 				return true;
 		}

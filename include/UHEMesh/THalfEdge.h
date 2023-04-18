@@ -62,18 +62,18 @@ namespace Ubpa {
 		HalfEdgeNextView<true, Traits> NextLoop() const { return NextTo(This()); }
 
 		// [begin, end), begin == end <=> loop
+		static HalfEdgeRotateNextView<true, Traits> RotateNextBetween(const H* begin, const H* end) { return { begin, end }; }
+		// [this, end), RotateNextBetween(this, end);
+		HalfEdgeRotateNextView<true, Traits> RotateNextTo(const H* end) const { return RotateNextBetween(This(), end); }
+		// RotateNextBetween(this, this), a loop from this to this
+		HalfEdgeRotateNextView<true, Traits> RotateNextLoop() const { return RotateNextTo(This()); }
+
+		// [begin, end), begin == end <=> loop
 		static HalfEdgeRotateNextView<false, Traits> RotateNextBetween(H* begin, H* end) { return { begin, end }; }
 		// [this, end), RotateNextBetween(this, end);
 		HalfEdgeRotateNextView<false, Traits> RotateNextTo(H* end) { return RotateNextBetween(This(), end); }
 		// RotateNextBetween(this, this), a loop from this to this
 		HalfEdgeRotateNextView<false, Traits> RotateNextLoop() { return RotateNextTo(This()); }
-
-		// [begin, end), begin == end <=> loop
-		static HalfEdgeRotateNextView<false, Traits> RotateNextBetween(const H* begin, const H* end) { return { begin, end }; }
-		// [this, end), RotateNextBetween(this, end);
-		HalfEdgeRotateNextView<false, Traits> RotateNextTo(const H* end) const { return RotateNextBetween(This(), end); }
-		// RotateNextBetween(this, this), a loop from this to this
-		HalfEdgeRotateNextView<false, Traits> RotateNextLoop() const { return RotateNextTo(This()); }
 
 		std::size_t PolygonDegree() const noexcept;
 
