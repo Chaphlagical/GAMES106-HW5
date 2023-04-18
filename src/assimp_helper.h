@@ -43,6 +43,11 @@ struct Mesh
 
 	// For rendering
 	bool is_visible = true;
+
+	// auxiliary annotations
+	// Conflicts with the wireframe, recommend to toggle wireframe off while using this
+	using EdgeTuple = std::tuple<Eigen::Vector3d, Eigen::Vector3d, Eigen::RowVector3d>;
+	std::vector<EdgeTuple> overlayEdges;
 };
 
 struct Instance
