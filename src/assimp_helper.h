@@ -17,15 +17,37 @@ struct Texture
 
 struct Mesh
 {
+	// dims = num_vertices * 3
+	// e.g. The position for i'th vertex: (V(i, 0), V(i, 1), V(i, 2))
 	Eigen::MatrixXd V;
+
+	// dims = num_vertices * 3
+	// e.g. The normal for i'th vertex: (N(i, 0), N(i, 1), N(i, 2))
+	//   => (Might need manual renormalization)
 	Eigen::MatrixXd N;
+
+	// dims = num_vertices * 2
+	// e.g. The texture coordinate for i'th vertex: (UV(i, 0), UV(i, 1))
 	Eigen::MatrixXd UV;
+
+	// dims = num_faces * 3
+	// e.g. The associated vertex indices for i'th triangle: (F(i, 0), F(i, 1), F(i, 2))
+	//   => Indices start with 0
+	// Assimp imports the face as CCW (counter clockwise), that is
+	//       x2
+	//             x0
+	//    x1
 	Eigen::MatrixXi F;
 
 	int32_t texture = -1;
 
 	// For rendering
 	bool is_visible = true;
+
+	// auxiliary annotations
+	// Conflicts with the wireframe, recommend to toggle wireframe off while using this
+	using EdgeTuple = std::tuple<Eigen::Vector3d, Eigen::Vector3d, Eigen::RowVector3d>;
+	std::vector<EdgeTuple> overlayEdges;
 };
 
 struct Instance
