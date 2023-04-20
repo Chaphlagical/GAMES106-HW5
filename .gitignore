@@ -36,3 +36,4 @@
 /vsxmake**
 out/
 .vs/
+!/debug-model/**
