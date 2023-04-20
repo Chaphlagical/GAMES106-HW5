@@ -232,6 +232,25 @@ void Application::UpdateSceneViewer()
 				const auto &texture = m_scene.textures[mesh.texture];
 				m_viewer.data_list[id].set_texture(texture.R, texture.G, texture.B);
 			}
+
+			if (mesh.overlayEdges.size() > 0)
+			{
+				Eigen::MatrixXd P1, P2, C;
+				P1.resize(mesh.overlayEdges.size(), 3);
+				P2.resizeLike(P1);
+				C.resizeLike(P1);
+
+				int idx = 0;
+				for (auto& overlayEdge : mesh.overlayEdges)
+				{
+					P1.row(idx) = std::get<0>(overlayEdge);
+					P2.row(idx) = std::get<1>(overlayEdge);
+					C.row(idx)  = std::get<2>(overlayEdge);
+					idx++;
+				}
+				m_viewer.data_list[id].add_edges(P1, P2, C);
+			}
+
 			m_viewer.data_list[id].set_visible(instance.is_visible && mesh.is_visible);
 			m_viewer.data_list[id].show_texture = true;
 			++id;

@@ -15,17 +15,49 @@
 #include <set>
 #include <thread>
 
-Mesh MeshReduction::Reduction(const Mesh &mesh_, float ratio)
+#include "assimp_helper.h"
+
+#ifdef QEM_USE_UHEMESH
+#include <QEMUHEMesh.h>
+#endif
+
+#ifdef QEM_USE_OPENMESH
+#include <QEMOpenMesh.h>
+#endif
+
+
+Mesh MeshReduction::Reduction(const Mesh &mesh, float ratio)
 {
-	return Mesh();
+	QEM qem;
+	qem.ImportMesh(mesh);
+	// TODO: implement me
+	int targetCount = std::ceil(mesh.F.rows() * ratio);
+	qem.DoSimplification(QEM::SimplificationMode::Position, targetCount);
+
+	Mesh outputMesh = qem.ExportMesh();
+	return outputMesh;
 }
 
 Mesh MeshReduction::ReductionWithAppearancePresentation(const Mesh &mesh, float ratio)
 {
-	return Mesh();
+	QEM qem;
+	qem.ImportMesh(mesh);
+	// TODO: implement me
+	int targetCount = std::ceil(mesh.F.rows() * ratio);
+	qem.DoSimplification(QEM::SimplificationMode::PositionNormal, targetCount);
+
+	Mesh outputMesh = qem.ExportMesh();
+	return outputMesh;
 }
 
 Mesh MeshReduction::ReductionWithUVMap(const Mesh &mesh, float ratio)
 {
-	return Mesh();
+	QEM qem;
+	qem.ImportMesh(mesh);
+	// TODO: implement me
+	int targetCount = std::ceil(mesh.F.rows() * ratio);
+	qem.DoSimplification(QEM::SimplificationMode::PositionNormalUV, targetCount);
+
+	Mesh outputMesh = qem.ExportMesh();
+	return outputMesh;
 }

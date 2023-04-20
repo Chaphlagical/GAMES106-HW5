@@ -34,3 +34,5 @@
 /build/**
 /.xmake/**
 /vsxmake**
+out/
+.vs/
