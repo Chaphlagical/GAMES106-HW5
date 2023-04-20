@@ -117,3 +117,43 @@ Z       Snap to canonical view
 ;       Toggle vertex labels
 :       Toggle face labels
 ```
+
+### 效果参考
+
+下面为助教的 QEM 实现在 DamagedHelmet 和 `qem-debug-normal-curved` 上的表现。
+
+> 这里为了简便，用的是固定边界的实现。
+>
+> 渲染图采用 Blender Eevee 渲染。
+
+#### 法线测试 (ratio=0.5)
+
+左边为原模型 `qem-debug-normal-curved`，中间为**QEM 网格简化**实现简化后的结果，右边为**考虑顶点属性 (除 UV) 的网格简化**实现简化后的简化结果。
+
+![](img/qem-normal-test.png)
+
+![image-20230420222200240](img/qem-normal-test-nowireframe.png)
+
+#### DamagedHelmet (ratio=0.7) - 原模型
+
+![](img/helmet-original.png)
+
+![](img/helmet-rendered-original.png)
+
+#### DamagedHelmet - QEM 网格简化
+
+![](img/helmet-method1.png)
+
+![](img/helmet-rendered-method1.png)
+
+#### DamagedHelmet - 考虑顶点属性 (除 UV) 的网格简化
+
+![](img/helmet-method2.png)
+
+![](img/helmet-rendered-method2.png)
+
+#### DamagedHelmet - 考虑顶点属性 (含 UV) 的网格简化
+
+![](img/helmet-method3.png)
+
+![](img/helmet-rendered-method3.png)
