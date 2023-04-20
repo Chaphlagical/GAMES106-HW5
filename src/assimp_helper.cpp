@@ -49,7 +49,7 @@ Scene AssimpHelper::Load(const char *filename, uint32_t flags)
 
 	std::map<std::string, int32_t> texture_map;
 
-	if (s_scene = s_importer.ReadFile(filename, flags))
+	if (s_scene = s_importer.ReadFile(filename, flags | aiProcess_FlipUVs))
 	{
 		scene.filename     = filename;
 		scene.assimp_scene = s_scene;
@@ -257,7 +257,7 @@ void AssimpHelper::Save(const char *filename, const Scene &scene, const char *fl
 			if (j < num_texcoords)
 			{
 				assimp_mesh->mTextureCoords[0][j].x = static_cast<float>(scene.meshes[i].UV(j, 0));
-				assimp_mesh->mTextureCoords[0][j].y = static_cast<float>(scene.meshes[i].UV(j, 1));
+				assimp_mesh->mTextureCoords[0][j].y = 1.f - static_cast<float>(scene.meshes[i].UV(j, 1));
 			}
 		}
 
