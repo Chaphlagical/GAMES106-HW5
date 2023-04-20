@@ -122,7 +122,7 @@ Z       Snap to canonical view
 
 下面为助教的 QEM 实现在 DamagedHelmet 和 `qem-debug-normal-curved` 上的表现。
 
-> 这里为了简便，用的是固定边界的实现。
+> 这只是一个示例，用的是固定边界的实现。实际上对边界用边界平面法做惩罚会得到更好的效果。
 >
 > 渲染图采用 Blender Eevee 渲染。
 
@@ -140,19 +140,19 @@ Z       Snap to canonical view
 
 ![](img/helmet-rendered-original.png)
 
-#### DamagedHelmet - QEM 网格简化
+#### DamagedHelmet (ratio=0.7) - QEM 网格简化
 
 ![](img/helmet-method1.png)
 
 ![](img/helmet-rendered-method1.png)
 
-#### DamagedHelmet - 考虑顶点属性 (除 UV) 的网格简化
+#### DamagedHelmet (ratio=0.7) - 考虑顶点属性 (除 UV) 的网格简化
 
 ![](img/helmet-method2.png)
 
 ![](img/helmet-rendered-method2.png)
 
-#### DamagedHelmet - 考虑顶点属性 (含 UV) 的网格简化
+#### DamagedHelmet (ratio=0.7) - 考虑顶点属性 (含 UV) 的网格简化
 
 ![](img/helmet-method3.png)
 
