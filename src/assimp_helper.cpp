@@ -193,6 +193,7 @@ void AssimpHelper::Save(const char *filename, const Scene &scene, const char *fl
 				assimp_mesh->mVertices = nullptr;
 			}
 			assimp_mesh->mVertices = new aiVector3D[num_vertices];
+			assimp_mesh->mNumVertices = num_vertices;
 		}
 
 		if (assimp_mesh->mNumFaces != num_faces)
@@ -204,6 +205,12 @@ void AssimpHelper::Save(const char *filename, const Scene &scene, const char *fl
 				assimp_mesh->mFaces = nullptr;
 			}
 			assimp_mesh->mFaces = new aiFace[num_faces];
+			assimp_mesh->mNumFaces = num_faces;
+			for (uint32_t j = 0; j < num_faces; j++)
+			{
+				assimp_mesh->mFaces[j].mNumIndices = 3;
+				assimp_mesh->mFaces[j].mIndices = new uint32_t[3];
+			}
 		}
 
 		for (uint32_t j = 0; j < num_vertices; j++)
