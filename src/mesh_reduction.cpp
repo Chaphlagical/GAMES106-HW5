@@ -35,6 +35,7 @@ Mesh MeshReduction::Reduction(const Mesh &mesh, float ratio)
 	qem.DoSimplification(QEM::SimplificationMode::Position, targetCount);
 
 	Mesh outputMesh = qem.ExportMesh();
+	outputMesh.texture = mesh.texture;
 	return outputMesh;
 }
 
@@ -47,6 +48,7 @@ Mesh MeshReduction::ReductionWithAppearancePresentation(const Mesh &mesh, float 
 	qem.DoSimplification(QEM::SimplificationMode::PositionNormal, targetCount);
 
 	Mesh outputMesh = qem.ExportMesh();
+	outputMesh.texture = mesh.texture;
 	return outputMesh;
 }
 
@@ -59,5 +61,6 @@ Mesh MeshReduction::ReductionWithUVMap(const Mesh &mesh, float ratio)
 	qem.DoSimplification(QEM::SimplificationMode::PositionNormalUV, targetCount);
 
 	Mesh outputMesh = qem.ExportMesh();
+	outputMesh.texture = mesh.texture;
 	return outputMesh;
 }

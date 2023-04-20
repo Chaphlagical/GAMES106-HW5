@@ -24,7 +24,7 @@ class QEM
 		using Point      = OpenMesh::Vec3d;
 		using Normal     = OpenMesh::Vec3d;
 		using TexCoord2D = OpenMesh::Vec2d;
-		VertexAttributes(OpenMesh::Attributes::Status | OpenMesh::Attributes::Normal);
+		VertexAttributes(OpenMesh::Attributes::Status | OpenMesh::Attributes::Normal | OpenMesh::Attributes::TexCoord2D);
 		FaceAttributes(OpenMesh::Attributes::Status | OpenMesh::Attributes::Normal);
 		EdgeAttributes(OpenMesh::Attributes::Status);
 		HalfedgeAttributes(OpenMesh::Attributes::Status);
@@ -44,6 +44,7 @@ class QEM
 		{
 			auto vh = heMesh.add_vertex(OpenMesh::Vec3d(mesh.V(i, 0), mesh.V(i, 1), mesh.V(i, 2)));
 			heMesh.set_normal(vh, OpenMesh::Vec3d(mesh.N(i, 0), mesh.N(i, 1), mesh.N(i, 2)));
+			heMesh.set_texcoord2D(vh, OpenMesh::Vec2d(mesh.UV(i, 0), mesh.UV(i, 1)));
 			vhs.push_back(vh);
 		}
 
@@ -59,6 +60,7 @@ class QEM
 		outputMesh.V.resize(heMesh.n_vertices(), 3);
 		outputMesh.F.resize(heMesh.n_faces(), 3);
 		outputMesh.N.resize(heMesh.n_vertices(), 3);
+		outputMesh.UV.resize(heMesh.n_vertices(), 2);
 
 		for (int i = 0; i < heMesh.n_vertices(); i++)
 		{
@@ -69,6 +71,8 @@ class QEM
 			outputMesh.N(i, 0) = heMesh.normal(vh)[0];
 			outputMesh.N(i, 1) = heMesh.normal(vh)[1];
 			outputMesh.N(i, 2) = heMesh.normal(vh)[2];
+			outputMesh.UV(i, 0) = heMesh.texcoord2D(vh)[0];
+			outputMesh.UV(i, 1) = heMesh.texcoord2D(vh)[1];
 		}
 
 		for (int i = 0; i < heMesh.n_faces(); i++)
