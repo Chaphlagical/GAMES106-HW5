@@ -32,7 +32,7 @@ void Application::Run()
 
 void Application::DrawUI()
 {
-	ImGui::Text("GAMES 106 HW 6");
+	ImGui::Text("GAMES 106 HW 5");
 	ImGui::Text("Mesh Simplification");
 	SceneColor();
 	LoadScene();
