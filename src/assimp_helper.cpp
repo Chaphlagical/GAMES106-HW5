@@ -181,19 +181,47 @@ void AssimpHelper::Save(const char *filename, const Scene &scene, const char *fl
 	{
 		aiMesh *assimp_mesh = scene.assimp_scene->mMeshes[i];
 
-		const uint32_t num_vertices = static_cast<uint32_t>(scene.meshes[i].V.rows());
-		const uint32_t num_faces    = static_cast<uint32_t>(scene.meshes[i].F.rows());
+		const uint32_t num_vertices  = static_cast<uint32_t>(scene.meshes[i].V.rows());
+		const uint32_t num_faces     = static_cast<uint32_t>(scene.meshes[i].F.rows());
+		const uint32_t num_normals   = static_cast<uint32_t>(scene.meshes[i].N.rows());
+		const uint32_t num_texcoords = static_cast<uint32_t>(scene.meshes[i].UV.rows());
 
 		if (assimp_mesh->mNumVertices != num_vertices)
 		{
-			assimp_mesh->mNumVertices = num_vertices;
-			if (assimp_mesh->mVertices)
+			// Recreate vertices
 			{
-				delete[] assimp_mesh->mVertices;
-				assimp_mesh->mVertices = nullptr;
+				assimp_mesh->mNumVertices = num_vertices;
+				if (assimp_mesh->mVertices)
+				{
+					delete[] assimp_mesh->mVertices;
+					assimp_mesh->mVertices = nullptr;
+				}
+				assimp_mesh->mVertices = new aiVector3D[num_vertices];
 			}
-			assimp_mesh->mVertices = new aiVector3D[num_vertices];
-			assimp_mesh->mNumVertices = num_vertices;
+			// Recreate normals
+			{
+				if (assimp_mesh->mNormals)
+				{
+					delete[] assimp_mesh->mNormals;
+					assimp_mesh->mNormals = nullptr;
+				}
+				if (num_normals > 0)
+				{
+					assimp_mesh->mNormals = new aiVector3D[num_normals];
+				}
+			}
+			// Recreate texcoords 0
+			{
+				if (assimp_mesh->mTextureCoords[0])
+				{
+					delete[] assimp_mesh->mTextureCoords[0];
+					assimp_mesh->mTextureCoords[0] = nullptr;
+				}
+				if (num_texcoords > 0)
+				{
+					assimp_mesh->mTextureCoords[0] = new aiVector3D[num_texcoords];
+				}
+			}
 		}
 
 		if (assimp_mesh->mNumFaces != num_faces)
@@ -204,12 +232,12 @@ void AssimpHelper::Save(const char *filename, const Scene &scene, const char *fl
 				delete[] assimp_mesh->mFaces;
 				assimp_mesh->mFaces = nullptr;
 			}
-			assimp_mesh->mFaces = new aiFace[num_faces];
+			assimp_mesh->mFaces    = new aiFace[num_faces];
 			assimp_mesh->mNumFaces = num_faces;
 			for (uint32_t j = 0; j < num_faces; j++)
 			{
 				assimp_mesh->mFaces[j].mNumIndices = 3;
-				assimp_mesh->mFaces[j].mIndices = new uint32_t[3];
+				assimp_mesh->mFaces[j].mIndices    = new uint32_t[3];
 			}
 		}
 
@@ -218,11 +246,24 @@ void AssimpHelper::Save(const char *filename, const Scene &scene, const char *fl
 			assimp_mesh->mVertices[j].x = static_cast<float>(scene.meshes[i].V(j, 0));
 			assimp_mesh->mVertices[j].y = static_cast<float>(scene.meshes[i].V(j, 1));
 			assimp_mesh->mVertices[j].z = static_cast<float>(scene.meshes[i].V(j, 2));
+
+			if (j < num_normals)
+			{
+				assimp_mesh->mNormals[j].x = static_cast<float>(scene.meshes[i].N(j, 0));
+				assimp_mesh->mNormals[j].y = static_cast<float>(scene.meshes[i].N(j, 1));
+				assimp_mesh->mNormals[j].z = static_cast<float>(scene.meshes[i].N(j, 2));
+			}
+
+			if (j < num_texcoords)
+			{
+				assimp_mesh->mTextureCoords[0][j].x = static_cast<float>(scene.meshes[i].UV(j, 0));
+				assimp_mesh->mTextureCoords[0][j].y = static_cast<float>(scene.meshes[i].UV(j, 1));
+			}
 		}
 
 		for (uint32_t j = 0; j < num_faces; j++)
 		{
-			// TODO
+			// TODO: Polygon mesh?
 			assert(assimp_mesh->mFaces[j].mNumIndices == 3);
 			for (uint32_t k = 0; k < 3; k++)
 			{
