@@ -158,22 +158,6 @@ void Application::SceneInfo()
 
 void Application::SceneColor(bool reset)
 {
-	static bool wireframe = true;
-	if (ImGui::Checkbox("Wireframe", &wireframe))
-	{
-		size_t instance_id = 0;
-		size_t submesh_id  = 0;
-		for (auto &instance : m_scene.instances)
-		{
-			for (auto &mesh : instance.submeshes)
-			{
-				m_viewer.data_list[submesh_id].show_lines = wireframe;
-				++submesh_id;
-			}
-			++instance_id;
-		}
-	}
-
 	const char *const color_config[] = {"Texture", "Mesh", "Submesh", "Instance"};
 	if (reset || ImGui::Combo("Color Config", reinterpret_cast<int32_t *>(&m_color_config), color_config, 4))
 	{
