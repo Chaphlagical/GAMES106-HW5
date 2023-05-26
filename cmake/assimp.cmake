@@ -16,9 +16,15 @@ set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(assimp)
 
+
+
 set_target_properties(assimp PROPERTIES FOLDER "3rdparty/assimp")
 set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs PROPERTIES FOLDER "3rdparty/assimp")
-set_target_properties(zlibstatic PROPERTIES FOLDER "3rdparty/assimp")
+
+find_package(ZLIB)
+if(NOT ZLIB_FOUND AND NOT TARGET ZLIB::ZLIB)
+    set_target_properties(zlibstatic PROPERTIES FOLDER "3rdparty/assimp")
+endif()
 
 
 
