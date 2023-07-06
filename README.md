@@ -128,7 +128,7 @@ Z       Snap to canonical view
 
 #### 法线测试 (ratio=0.5)
 
-左边为原模型 `qem-debug-normal-curved`，中间为**QEM 网格简化**实现简化后的结果，右边为**考虑顶点属性 (除 UV) 的网格简化**实现简化后的简化结果。
+左边为原模型 `qem-debug-normal-curved`，中间为**考虑顶点属性 (除 UV) 的网格简化**实现简化后的结果，右边为**考虑顶点属性 (含 UV) 的网格简化**实现简化后的简化结果。
 
 ![](img/qem-normal-test.png)
 
