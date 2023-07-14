@@ -1,5 +1,5 @@
 #pragma once
-#include "UHEMesh/HeMesh.h"
+#include "UHEMesh/HEMesh.h"
 #include "QEMDebug.h"
 #include <Eigen/Sparse>
 #include "assimp_helper.h"
@@ -42,8 +42,6 @@ public:
 	{
 		// TODO: add edge associated QEM attributes here
 	};
-
-	using HEMesh = Ubpa::HEMesh<TraitsVEP>;
 
 private:
 	HEMesh heMesh;

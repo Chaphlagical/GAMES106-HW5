@@ -18,6 +18,7 @@ set(CMAKE_CXX_STANDARD 17)
 file(GLOB SRC_FILES src/*.cpp src/*.h)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_link_libraries(${PROJECT_NAME} PUBLIC igl::glfw igl::imgui assimp::assimp)
 
 if (QEM_USE_OPENMESH)
