@@ -3,6 +3,7 @@
 #include "QEMDebug.h"
 #include "assimp_helper.h"
 #include <vector>
+#include <map>
 
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
@@ -39,12 +40,20 @@ class QEM
 	inline void ImportMesh(const Mesh &mesh)
 	{
 		std::vector<QEMMesh::VertexHandle> vhs;
+		std::map<std::array<double, 3>, QEMMesh::VertexHandle> mp;
 
 		for (int i = 0; i < mesh.V.rows(); i++)
 		{
-			auto vh = heMesh.add_vertex(OpenMesh::Vec3d(mesh.V(i, 0), mesh.V(i, 1), mesh.V(i, 2)));
-			heMesh.set_normal(vh, OpenMesh::Vec3d(mesh.N(i, 0), mesh.N(i, 1), mesh.N(i, 2)));
-			heMesh.set_texcoord2D(vh, OpenMesh::Vec2d(mesh.UV(i, 0), mesh.UV(i, 1)));
+			std::array<double, 3> pt{mesh.V(i, 0), mesh.V(i, 1), mesh.V(i, 2)};
+			QEMMesh::VertexHandle vh;
+			if (mp.find(pt) != mp.end())
+				vh = mp[pt];
+			else {
+				vh = heMesh.add_vertex(QEMMesh::Point(mesh.V(i, 0), mesh.V(i, 1), mesh.V(i, 2)));
+				heMesh.set_normal(vh, QEMMesh::Normal(mesh.N(i, 0), mesh.N(i, 1), mesh.N(i, 2)));
+				heMesh.set_texcoord2D(vh, QEMMesh::TexCoord2D(mesh.UV(i, 0), mesh.UV(i, 1)));
+				mp[pt] = vh;
+			}
 			vhs.push_back(vh);
 		}
 

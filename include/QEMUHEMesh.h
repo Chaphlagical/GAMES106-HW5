@@ -3,6 +3,7 @@
 #include "QEMDebug.h"
 #include <Eigen/Sparse>
 #include "assimp_helper.h"
+#include <map>
 
 class QEM
 {
@@ -122,9 +123,14 @@ public:
 	{
 		heMesh.Clear();
 
+		std::map<std::array<double, 3>, HEMesh::V*> mp;
+		std::vector<HEMesh::V*> verts;
+
 		for (size_t i = 0; i < mesh.V.rows(); i++)
 		{
-			heMesh.AddVertex(mesh.V.row(i), mesh.N.row(i), mesh.UV.row(i));
+			std::array<double, 3> pt{mesh.V(i, 0), mesh.V(i, 1), mesh.V(i, 2)};
+			if (mp.find(pt) == mp.end()) mp[pt] = heMesh.AddVertex(mesh.V.row(i), mesh.N.row(i), mesh.UV.row(i));
+			verts.push_back(mp[pt]);
 		}
 
 		for (size_t fIndex = 0; fIndex < mesh.F.rows(); fIndex++)
@@ -134,8 +140,8 @@ public:
 			{
 				size_t next = (i + 1) % 3;
 				assert(mesh.F(fIndex, i) != mesh.F(fIndex, next));
-				auto *u  = heMesh.Vertices()[mesh.F(fIndex, i)];
-				auto *v  = heMesh.Vertices()[mesh.F(fIndex, next)];
+				auto *u  = verts[mesh.F(fIndex, i)];
+				auto *v  = verts[mesh.F(fIndex, next)];
 				auto *he = u->HalfEdgeTo(v);
 				if (!he)
 				{
