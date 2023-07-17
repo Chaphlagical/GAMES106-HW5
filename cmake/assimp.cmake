@@ -19,7 +19,9 @@ FetchContent_MakeAvailable(assimp)
 
 
 set_target_properties(assimp PROPERTIES FOLDER "3rdparty/assimp")
-set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs PROPERTIES FOLDER "3rdparty/assimp")
+if (WIN32)
+    set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs PROPERTIES FOLDER "3rdparty/assimp")
+endif()
 
 find_package(ZLIB)
 if(NOT ZLIB_FOUND AND NOT TARGET ZLIB::ZLIB)
