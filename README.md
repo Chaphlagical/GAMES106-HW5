@@ -2,6 +2,9 @@
 
 GAMES 106 作业 5：网格简化
 
+> Changelog:
+> - 2023-08-03: 更新了 `debug-model/qem-test-fixed.obj`，该模型删去了 `qem-test.obj` 中的法线和纹理坐标信息，assimp 导入时则可以不拆分顶点，比较方便测试不支持分邻接顶点合并的简化算法。
+
 ## 作业简介
 
 本次作业需要完成三个实验：
@@ -92,7 +95,7 @@ QEM 是网格简化领域的经典算法，原文中也提及了不少可能的�
 
 - `debug-model/qem-simple.obj`: 四个三角形组成的 Quad
 - `debug-model/qem-grid-<number>.obj`: `<number>-1` 的平方个 Quad
-- `debug-model/qem-test.obj`: 简用于测试网格简化
+- `debug-model/qem-test-fixed.obj`: 简用于测试网格简化
 - `debug-model/qem-debug-normal-curved.obj`: 用于测试考虑法线的网格简化
 - [DamagedHelmet @ glTF-Sample-Models](https://github.com/KhronosGroup/glTF-Sample-Models/blob/master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb): 用于对比三种算法的效果
 
